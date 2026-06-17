@@ -1,7 +1,6 @@
 module Kwaterniony
 using StaticArrays
-
-export Quaternion,convert,j,k,show,+,-,*,zero,one,conj,abs2,abs,/,Matrix,number_from_matrix,obrót
+export Quaternion,convert,promote_rule,j,k,show,+,-,*,zero,one,conj,abs2,abs,/,Matrix,number_from_matrix,obrót
 #konstruktor typu
 struct Quaternion{T<:Real} <: Number
     re::T
@@ -9,22 +8,38 @@ struct Quaternion{T<:Real} <: Number
     im_j::T
     im_k::T
 end
-
 function Quaternion(re::Real, im_i::Real, im_j::Real, im_k::Real)
     T = promote_type(typeof(re), typeof(im_i), typeof(im_j), typeof(im_k))
-    return Quaternion{T}(T(re), T(im_i), T(im_j), T(im_k))
+    return Quaternion{T}(re, im_i, im_j, im_k)
+end
+
+function Quaternion(re::Real)
+    return Quaternion{typeof(re)}(re, 0, 0, 0)
+end
+
+function Quaternion(comp::Complex)
+    return Quaternion{typeof(real(comp))}(real(comp), imag(comp), 0, 0)
 end
 
 #rzutowanie liczb rzeczywistych i zespolonych na kwaterniony
+function Base.convert(::Type{Quaternion{T}}, x::Quaternion{S}) where {T<:Real,S<:Real}
+    return Quaternion{T}(T(x.re), T(x.im_i), T(x.im_j), T(x.im_k))
+end
 Base.convert(::Type{Quaternion{T}}, x::Real) where {T<:Real} =
     Quaternion{T}(T(x), zero(T), zero(T), zero(T))
 
 Base.convert(::Type{Quaternion{T}}, z::Complex) where {T<:Real} =
     Quaternion{T}(T(real(z)), T(imag(z)), zero(T), zero(T))
 
+Base.promote_rule(::Type{Quaternion{T}},::Type{Quaternion{S}}) where {S<:Real, T<:Real}=Quaternion{promote_type(S,T)}
+
+Base.promote_rule(::Type{Quaternion{T}},::Type{S}) where {S<:Real, T<:Real}=Quaternion{promote_type(S,T)}
+
+Base.promote_rule(::Type{Quaternion{T}},::Type{Complex{S}}) where {S<:Real, T<:Real}=Quaternion{promote_type(S,T)}
+
 #jednostki urojone
-const j = Quaternion(0, 0, 1, 0)
-const k = Quaternion(0, 0, 0, 1)
+const j = Quaternion(false, false, true, false)
+const k = Quaternion(false, false, false, true)
 
 #pokazywanie
 function Base.show(io::IO, q::Quaternion)
@@ -86,12 +101,13 @@ Base.abs2(q::Quaternion) = q.re^2 + q.im_i^2 + q.im_j^2 + q.im_k^2
 
 Base.abs(q::Quaternion) = sqrt(abs2(q))
 
+
 #liczba odwrotna
 function Base.inv(q::Quaternion)
     if iszero(abs2(q))
         throw(DivideError())
     end
-    return conj(q) * (one(abs2(q)) / abs2(q))
+    return conj(q)*(1/abs2(q))
 end
 
 #dzielenie
@@ -102,6 +118,21 @@ function Base.:/(q1::Quaternion, q2::Quaternion)
     return q1 * inv(q2)
 end
 
+#potęgowanie
+function Base.:^(q::Quaternion,n::Integer)
+    if n==0
+        return one(q)
+    elseif n>0
+        q_pocz=q
+        for i∈1:(n-1)
+            q*=q_pocz
+        end
+        return q
+    else
+        return inv(q)^(-n)
+    end
+end   
+ 
 #postać macierzy zespolonej
 function Base.Matrix(q::Quaternion)
     return @SMatrix [
@@ -110,20 +141,22 @@ function Base.Matrix(q::Quaternion)
     ]
 end
 
-# zamiana z postaci macierzowej na liczbę
-function number_from_matrix(M::Matrix{Complex})
-    if size(M)==(2,2) && M[1,1]==conj(M[2,2]) && M[2,1]==-conj(M[1,2])
-        return M[1,1]+(real(M[1,2]))j+(imag(M[1,2]))k
-    else
-        throw(ArgumentError("Brak reprezentacji liczbowej"))
-    end
+#postac macierzowa liczb zespoloynch
+function Base.Matrix(comp::Complex)
+    return @SMatrix [
+    real(comp)      -imag(comp);
+       imag(comp)    real(comp)
+    ]
 end
 
-function number_from_matrix(M::Matrix{Real})
+# zamiana z postaci macierzowej na liczbę
+function number_from_matrix(M::SMatrix)
     if size(M)==(2,2) && M[1,1]==M[2,2] && M[2,1]==-M[1,2]
-        return M[1,1]+(M[2,1])im
+        return M[1,1]+(imag(M[1,1]))im
+    elseif size(M)==(2,2) && M[1,1]==conj(M[2,2]) && M[2,1]==-conj(M[1,2])
+        return M[1,1]+(imag(M[1,1]))im+(real(M[1,2]))j+(imag(M[1,2]))k
     else
-        throw(ArgumentError("Brak reprezentacji liczbowej."))
+        throw(ArgumentError("Brak reprezentacji liczbowej"))
     end
 end
 
