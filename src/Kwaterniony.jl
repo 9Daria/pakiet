@@ -32,20 +32,13 @@ function Quaternion(comp::Complex)
 end
 
 #rzutowanie liczb rzeczywistych i zespolonych na kwaterniony
-"""
-convert(::Type{Quaternion{T}}, x::Quaternion{S}) where {T<:Real,S<:Real} in Kwaterniony at Kwaterniony.jl:71
-"""
 function Base.convert(::Type{Quaternion{T}}, x::Quaternion{S}) where {T<:Real,S<:Real}
     return Quaternion{T}(T(x.re), T(x.im_i), T(x.im_j), T(x.im_k))
 end
-"""
-convert(::Type{Quaternion{T}}, x::Real) where {T<:Real} in Kwaterniony at Kwaterniony.jl:71
-"""
+
 Base.convert(::Type{Quaternion{T}}, x::Real) where {T<:Real} =
     Quaternion{T}(T(x), zero(T), zero(T), zero(T))
-"""
-convert(::Type{Quaternion{T}}, z::Complex) where {T<:Real} in Kwaterniony at Kwaterniony.jl:71
-"""
+
 Base.convert(::Type{Quaternion{T}}, z::Complex) where {T<:Real} =
     Quaternion{T}(T(real(z)), T(imag(z)), zero(T), zero(T))
 
@@ -80,9 +73,6 @@ k*i
 const k = Quaternion(false, false, false, true)
 
 #pokazywanie
-"""
-show(io::IO, q::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-"""
 function Base.show(io::IO, q::Quaternion)
     print(io, q.re)
 
@@ -98,6 +88,8 @@ end
 #dodawanie
 """
 +(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+1 + 2i + 3j + 4k
+0 + 1i + 2j +3k
 """
 Base.:+(q1::Quaternion, q2::Quaternion) =
     Quaternion(
