@@ -182,7 +182,7 @@ end
 
 # zamiana z postaci macierzowej na liczbę
 """
-number_from_matrix(M::SMatrix)
+number_from_matrix(M::AbstractMatrix)
 Return number representation of the matrix.
 Example:
 ```julia
@@ -190,7 +190,7 @@ Example:
 1 + 4im + 2j + 1k
 ```
 """
-function number_from_matrix(M::SMatrix)
+function number_from_matrix(M::AbstractMatrix)
     if size(M)==(2,2) && M[1,1]==M[2,2] && M[2,1]==-M[1,2]
         return M[1,1]+(imag(M[1,1]))im
     elseif size(M)==(2,2) && M[1,1]==conj(M[2,2]) && M[2,1]==-conj(M[1,2])
