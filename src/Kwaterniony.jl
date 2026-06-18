@@ -47,11 +47,23 @@ Base.promote_rule(::Type{Quaternion{T}},::Type{S}) where {S<:Real, T<:Real}=Quat
 
 Base.promote_rule(::Type{Quaternion{T}},::Type{Complex{S}}) where {S<:Real, T<:Real}=Quaternion{promote_type(S,T)}
 
-#jednostki urojone
+#jednostki urojon
+"""
+j = Quaternion(false, false, true, false)
+Examples:
+```julia
+j*j
+-1 + 0im + 0j + 0k
+
+```
+"""
 const j = Quaternion(false, false, true, false)
 const k = Quaternion(false, false, false, true)
 
 #pokazywanie
+"""
+show(io::IO, q::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 function Base.show(io::IO, q::Quaternion)
     print(io, q.re)
 
@@ -65,6 +77,9 @@ function Base.show(io::IO, q::Quaternion)
 end
 
 #dodawanie
+"""
++(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.:+(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re + q2.re,
@@ -74,6 +89,9 @@ Base.:+(q1::Quaternion, q2::Quaternion) =
     )
 
 #odejmowanie
+"""
+-(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.:-(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re - q2.re,
@@ -83,10 +101,16 @@ Base.:-(q1::Quaternion, q2::Quaternion) =
     )
 
 #liczba przeciwna
+"""
+-(q::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.:-(q::Quaternion) =
     Quaternion(-q.re, -q.im_i, -q.im_j, -q.im_k)
 
 #mnożenie
+"""
+*(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.:*(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re*q2.re - q1.im_i*q2.im_i - q1.im_j*q2.im_j - q1.im_k*q2.im_k,
@@ -121,6 +145,9 @@ function Base.inv(q::Quaternion)
 end
 
 #dzielenie
+"""
+/(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
+"""
 function Base.:/(q1::Quaternion, q2::Quaternion) 
     if abs(q2) == 0 
         throw(DivideError())
