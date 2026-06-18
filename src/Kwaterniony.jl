@@ -2,6 +2,16 @@ module Kwaterniony
 using StaticArrays
 export Quaternion,convert,promote_rule,j,k,show,+,-,*,zero,one,conj,abs2,abs,/,Matrix,number_from_matrix,obrót
 #konstruktor typu
+"""
+    Quaternion{T<:Real}
+
+Quaternion number type with real and three imaginary parts of type T.
+```julia
+Quaternion(re, im_i, im_j, im_k)       # Construct the quaternion
+Quaternion(re)                         # Construct the quaternion with zeros as imaginary parts
+Quaternion(comp)                       # Construct the quaternion with zeros as imaginary j and k parts
+```
+"""
 struct Quaternion{T<:Real} <: Number
     re::T
     im_i::T
