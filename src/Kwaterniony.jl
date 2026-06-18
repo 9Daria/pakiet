@@ -86,11 +86,6 @@ function Base.show(io::IO, q::Quaternion)
 end
 
 #dodawanie
-"""
-+(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-1 + 2i + 3j + 4k
-0 + 1i + 2j +3k
-"""
 Base.:+(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re + q2.re,
@@ -100,9 +95,6 @@ Base.:+(q1::Quaternion, q2::Quaternion) =
     )
 
 #odejmowanie
-"""
--(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-"""
 Base.:-(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re - q2.re,
@@ -112,16 +104,10 @@ Base.:-(q1::Quaternion, q2::Quaternion) =
     )
 
 #liczba przeciwna
-"""
--(q::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-"""
 Base.:-(q::Quaternion) =
     Quaternion(-q.re, -q.im_i, -q.im_j, -q.im_k)
 
 #mnożenie
-"""
-*(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-"""
 Base.:*(q1::Quaternion, q2::Quaternion) =
     Quaternion(
         q1.re*q2.re - q1.im_i*q2.im_i - q1.im_j*q2.im_j - q1.im_k*q2.im_k,
@@ -156,9 +142,6 @@ function Base.inv(q::Quaternion)
 end
 
 #dzielenie
-"""
-/(q1::Quaternion, q2::Quaternion) in Kwaterniony at Kwaterniony.jl:71
-"""
 function Base.:/(q1::Quaternion, q2::Quaternion) 
     if abs(q2) == 0 
         throw(DivideError())
@@ -198,6 +181,15 @@ function Base.Matrix(comp::Complex)
 end
 
 # zamiana z postaci macierzowej na liczbę
+"""
+number_from_matrix(M::SMatrix)
+Return number representation of the matrix.
+Example:
+```julia
+[1 + 4im 2 + 1im; -2 + 1im 1 - 4im]
+1 + 4im + 2j + 1k
+```
+"""
 function number_from_matrix(M::SMatrix)
     if size(M)==(2,2) && M[1,1]==M[2,2] && M[2,1]==-M[1,2]
         return M[1,1]+(imag(M[1,1]))im
@@ -209,6 +201,18 @@ function number_from_matrix(M::SMatrix)
 end
 
 #obroty
+"""
+obrót(punkt,kąt,oś)
+Return coordinates of the image of a point rotated around a given axis by a given angle.
+Example:
+```julia
+obrót([1,1,1],pi,[1,0,0])
+3-element Vector{Float64}:
+  1.0
+ -1.0
+ -0.9999999999999998
+```
+"""
 function obrót(punkt,kąt,oś)
     p=Quaternion(0,punkt[1],punkt[2],punkt[3])
     
