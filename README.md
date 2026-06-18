@@ -5,15 +5,19 @@
 [![Build Status](https://github.com/9Daria/Kwaterniony.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/9Daria/Kwaterniony.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 Pakiet **Kwaterniony.jl** dostarcza implementację algebry kwaternionów w języku Julia. Wspiera:
-- Arytmetykę kwaternionów: podstawowe operacje (dodawanie `+`, odejmowanie `-`, mnożenie `*`, dzielenie `/`, potęgowanie `^`), wyznaczanie sprzężenia (`conj`), elementu odwrotnego (`inv`), modułu i jego kwadratu (`abs`, `abs2`) oraz elementów neutralnych (`zero`, `one`).
-- Reprezentację macierzową: dwukierunkowe mapowanie kwaternionów na zespolone macierze 2x2 za pomocą funkcji Matric oraz number_from_matrix. Kwaternion zapisany jako `q = a + bi + cj + dk` jest rzutowany do postaci:
+
+- **Arytmetykę kwaternionów:** podstawowe operacje (dodawanie `+`, odejmowanie `-`, mnożenie `*`, dzielenie `/`, potęgowanie `^`), wyznaczanie sprzężenia (`conj`), elementu odwrotnego (`inv`), modułu i jego kwadratu (`abs`, `abs2`) oraz elementów neutralnych (`zero`, `one`).
+- **Reprezentację macierzową:** dwukierunkowe mapowanie kwaternionów na zespolone macierze 2x2 za pomocą funkcji `Matrix` oraz `number_from_matrix`. Kwaternion zapisany jako `q = a + bi + cj + dk` jest rzutowany do postaci:
   ```julia
   [ a + b*im    c + d*im;
    -c + d*im    a - b*im ]
-- Obroty 3D: funkcja obrót(punkt, kąt, oś) do obliczania obrotów w przestrzeni trójwymiarowej wokół dowolnie zadanej osi.
+  ```
+- **Obroty 3D:** funkcja `obrót(punkt, kąt, oś)` do obliczania obrotów w przestrzeni trójwymiarowej wokół dowolnie zadanej osi.
+
 ## Instalacja
 
 Aby zainstalować pakiet, wejdź w tryb menedżera pakietów (wciskając `]`) w REPL Julii i wpisz:
 
 ```julia
 pkg> add [https://github.com/9Daria/Kwaterniony.jl](https://github.com/9Daria/Kwaterniony.jl)
+```
