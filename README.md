@@ -19,5 +19,5 @@ Pakiet **Kwaterniony.jl** dostarcza implementację algebry kwaternionów w języ
 Aby zainstalować pakiet, wejdź w tryb menedżera pakietów (wciskając `]`) w REPL Julii i wpisz:
 
 ```julia
-pkg> add https://github.com/9Daria/Kwaterniony.jl
+pkg> add https://github.com/9Daria/pakiet
 ```
