@@ -12,7 +12,7 @@ Pakiet **Kwaterniony.jl** dostarcza implementację algebry kwaternionów w języ
   [ a + b*im    c + d*im;
    -c + d*im    a - b*im ]
   ```
-- **Obroty 3D:** funkcja `obrót(punkt, kąt, oś)` do obliczania obrotów w przestrzeni trójwymiarowej wokół dowolnie zadanej osi.
+- **Obroty 3D:** funkcja `obrót(punkt, kąt, oś)` do obliczania obrotów w przestrzeni trójwymiarowej wokół dowolnie zadanej osi przechodzącej przez środek układu współrzędnych.
 
 ## Instalacja
 
