@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/9Daria/Kwaterniony.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/9Daria/Kwaterniony.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 Pakiet **Kwaterniony.jl** dostarcza implementację algebry kwaternionów w języku Julia. Wspiera:
-
+- **Rzutowanie typów:** automatyczne rzutowanie i reguły promocji (`convert`, `promote_rule`), które pozwalają na bezproblemowe łączenie kwaternionów z wbudowanymi w Julię liczbami rzeczywistymi (`Real`) i zespolonymi (`Complex`).
 - **Arytmetykę kwaternionów:** podstawowe operacje (dodawanie `+`, odejmowanie `-`, mnożenie `*`, dzielenie `/`, potęgowanie `^`), wyznaczanie sprzężenia (`conj`), elementu odwrotnego (`inv`), modułu i jego kwadratu (`abs`, `abs2`) oraz elementów neutralnych (`zero`, `one`).
 - **Reprezentację macierzową:** dwukierunkowe mapowanie kwaternionów na zespolone macierze 2x2 za pomocą funkcji `Matrix` oraz `number_from_matrix`. Kwaternion zapisany jako `q = a + bi + cj + dk` jest rzutowany do postaci:
   ```julia
