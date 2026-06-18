@@ -32,12 +32,20 @@ function Quaternion(comp::Complex)
 end
 
 #rzutowanie liczb rzeczywistych i zespolonych na kwaterniony
+"""
+convert(::Type{Quaternion{T}}, x::Quaternion{S}) where {T<:Real,S<:Real} in Kwaterniony at Kwaterniony.jl:71
+"""
 function Base.convert(::Type{Quaternion{T}}, x::Quaternion{S}) where {T<:Real,S<:Real}
     return Quaternion{T}(T(x.re), T(x.im_i), T(x.im_j), T(x.im_k))
 end
+"""
+convert(::Type{Quaternion{T}}, x::Real) where {T<:Real} in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.convert(::Type{Quaternion{T}}, x::Real) where {T<:Real} =
     Quaternion{T}(T(x), zero(T), zero(T), zero(T))
-
+"""
+convert(::Type{Quaternion{T}}, z::Complex) where {T<:Real} in Kwaterniony at Kwaterniony.jl:71
+"""
 Base.convert(::Type{Quaternion{T}}, z::Complex) where {T<:Real} =
     Quaternion{T}(T(real(z)), T(imag(z)), zero(T), zero(T))
 
@@ -54,10 +62,21 @@ Examples:
 ```julia
 j*j
 -1 + 0im + 0j + 0k
-
+j*im
+0 + 0im + 0j - 1k
 ```
 """
 const j = Quaternion(false, false, true, false)
+"""
+k = Quaternion(false, false, false, true)
+Examples:
+```julia
+k*k
+-1 + 0im + 0j + 0k
+k*i
+0 + 0im + 1j + 0k
+```
+"""
 const k = Quaternion(false, false, false, true)
 
 #pokazywanie
