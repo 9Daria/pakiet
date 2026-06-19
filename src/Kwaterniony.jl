@@ -214,6 +214,7 @@ obrót([1,1,1],pi,[1,0,0])
 ```
 """
 function obrót(punkt,kąt,oś)
+    kąt=mod(kąt,2π)
     p=Quaternion(0,punkt[1],punkt[2],punkt[3])
     
     długość_osi=sqrt(sum(oś.^2))
