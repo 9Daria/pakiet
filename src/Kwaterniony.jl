@@ -1,16 +1,31 @@
 module Kwaterniony
 using StaticArrays
 export Quaternion,convert,promote_rule,j,k,show,+,-,*,zero,one,conj,abs2,abs,/,Matrix,number_from_matrix,obrót
+
 #konstruktor typu
 """
     Quaternion{T<:Real}
 
-Quaternion number type with real and three imaginary parts of type T.
+Quaternion to typ liczbowy, reprezentujący kwaternion – liczbę z częścią rzeczywistą oraz trzema częściami urojonymi typu T.
+
+Niniejsza implementacja zakłada równoważność jednostki urojonej "im_i" oraz jednostki urojonej liczb zespolonych (im).
 ```julia
-Quaternion(re, im_i, im_j, im_k)       # Construct the quaternion
-Quaternion(re)                         # Construct the quaternion with zeros as imaginary parts
-Quaternion(comp)                       # Construct the quaternion with zeros as imaginary j and k parts
+Quaternion(re, im_i, im_j, im_k)   # Funkcja konstruuje kwaternion
+Quaternion(re)                     # Funkcja konstruuje kwaternion z zerowymi częściami urojonymi
+Quaternion(comp)                   # Funkcja konstruuje kwaternion z zerowymi częściami urojonymi "im_j" oraz "im_k"
 ```
+# Przykłady
+```jldoctest
+julia> Quaternion(1.0, 3.0, 2.0, 5.1)
+1.0 + 3.0im + 2.0j + 5.1k
+
+julia> Quaternion(1//2)
+1//2 + 0//1im + 0//1j + 0//1k
+
+julia> Quaternion(2+im)
+2 + 1im + 0j + 0k
+```
+
 """
 struct Quaternion{T<:Real} <: Number
     re::T
@@ -18,6 +33,7 @@ struct Quaternion{T<:Real} <: Number
     im_j::T
     im_k::T
 end
+
 function Quaternion(re::Real, im_i::Real, im_j::Real, im_k::Real)
     T = promote_type(typeof(re), typeof(im_i), typeof(im_j), typeof(im_k))
     return Quaternion{T}(re, im_i, im_j, im_k)
@@ -48,25 +64,28 @@ Base.promote_rule(::Type{Quaternion{T}},::Type{S}) where {S<:Real, T<:Real}=Quat
 
 Base.promote_rule(::Type{Quaternion{T}},::Type{Complex{S}}) where {S<:Real, T<:Real}=Quaternion{promote_type(S,T)}
 
-#jednostki urojon
+#jednostki urojone
 """
-j = Quaternion(false, false, true, false)
-Examples:
-```julia
-j*j
+    j
+Jest to jedna z jednostek urojonych kwaternionów. 
+# Przykłady
+```jldoctest
+julia> j*j
 -1 + 0im + 0j + 0k
-j*im
+julia> j*im
 0 + 0im + 0j - 1k
 ```
 """
 const j = Quaternion(false, false, true, false)
+
 """
-k = Quaternion(false, false, false, true)
-Examples:
-```julia
-k*k
+    k
+Jest to jedna z jednostek urojonych kwaternionów. 
+# Przykłady
+```jldoctest
+julia> k*k
 -1 + 0im + 0j + 0k
-k*i
+julia> k*i
 0 + 0im + 1j + 0k
 ```
 """
@@ -172,7 +191,7 @@ function Base.Matrix(q::Quaternion)
     ]
 end
 
-#postac macierzowa liczb zespoloynch
+#postać macierzowa liczb zespoloynch
 function Base.Matrix(comp::Complex)
     return @SMatrix [
     real(comp)      -imag(comp);
@@ -182,19 +201,22 @@ end
 
 # zamiana z postaci macierzowej na liczbę
 """
-number_from_matrix(M::AbstractMatrix)
-Return number representation of the matrix.
-Example:
-```julia
-[1 + 4im 2 + 1im; -2 + 1im 1 - 4im]
-1 + 4im + 2j + 1k
+    number_from_matrix(M::AbstractMatrix)
+Funkcja zwraca reprezentację liczbową macierzy 2x2.
+# Przykłady
+```jldoctest
+julia> number_from_matrix([1 -3; 3 1])
+1 + 3im
+
+julia> number_from_matrix([1+2im  3+4im; -3+4im  1-2im])
+1 + 2im + 3j + 4k
 ```
 """
 function number_from_matrix(M::AbstractMatrix)
     if size(M)==(2,2) && M[1,1]==M[2,2] && M[2,1]==-M[1,2]
         return M[1,1]+(imag(M[1,1]))im
     elseif size(M)==(2,2) && M[1,1]==conj(M[2,2]) && M[2,1]==-conj(M[1,2])
-        return M[1,1]+(imag(M[1,1]))im+(real(M[1,2]))j+(imag(M[1,2]))k
+        return real(M[1,1])+imag(M[1,1])im+(real(M[1,2]))j+(imag(M[1,2]))k
     else
         throw(ArgumentError("Brak reprezentacji liczbowej"))
     end
@@ -202,18 +224,21 @@ end
 
 #obroty
 """
-obrót(punkt,kąt,oś)
-Return coordinates of the image of a point rotated around a given axis by a given angle.
-Example:
-```julia
-obrót([1,1,1],pi,[1,0,0])
+    obrót(punkt::Vector, kąt::Number, oś::Vector)
+Funkcja jako argumenty przyjmuje 3-elementowy wektor współrzędnych punktu, kąt w radianach oraz
+3-elementowy wektor kierunku osi (oś przechodzi przez środek układu współrzędnych).
+
+Funkcja zwraca 3-elementowy wektor – obraz punktu po obrocie o zadany kąt względem podanej osi.
+# Przykład
+```jldoctest
+julia> obrót([0,1,0],π,[1,0,0])
 3-element Vector{Float64}:
-  1.0
+  0.0
  -1.0
- -0.9999999999999998
+  1.2246467991473532e-16
 ```
 """
-function obrót(punkt,kąt,oś)
+function obrót(punkt::Vector, kąt::Number, oś::Vector)
     p=Quaternion(0,punkt[1],punkt[2],punkt[3])
     
     długość_osi=sqrt(sum(oś.^2))
