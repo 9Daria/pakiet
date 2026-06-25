@@ -1,7 +1,7 @@
 module Kwaterniony
 using StaticArrays
 export Quaternion,convert,promote_rule,j,k,show,+,-,*,zero,one,conj,abs2,abs,/,Matrix,number_from_matrix,obrót
-
+ 
 #konstruktor typu
 """
     Quaternion{T<:Real}
