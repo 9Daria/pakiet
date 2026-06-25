@@ -92,15 +92,23 @@ julia> k*i
 const k = Quaternion(false, false, false, true)
 
 #pokazywanie
-function Base.show(io::IO, q::Quaternion)
-    print(io, q.re)
-
-    for (coef, symbol) in ((q.im_i, "im"), (q.im_j, "j"), (q.im_k, "k"))
-        if coef < 0
-            print(io, " - ", abs(coef), symbol)
-        else
-            print(io, " + ", coef, symbol)
-        end
+function Base.show(io::IO,q::Quaternion)
+    if q.im_i>=0 && q.im_j>=0 && q.im_k>=0
+        print(io,q.re," + ",q.im_i,"im"," + ",q.im_j,"j"," + ",q.im_k,"k")
+    elseif q.im_i<0 && q.im_j>=0 && q.im_k>=0
+        print(io,q.re," - ",abs(q.im_i),"im"," + ",q.im_j,"j"," + ",q.im_k,"k")
+    elseif q.im_i>=0 && q.im_j<0 && q.im_k>=0
+        print(io,q.re," + ",q.im_i,"im"," - ",abs(q.im_j),"j"," + ",q.im_k,"k")
+    elseif q.im_i>=0 && q.im_j>=0 && q.im_k<0
+        print(io,q.re," + ",q.im_i,"im"," + ",q.im_j,"j"," - ",abs(q.im_k),"k")
+    elseif q.im_i<0 && q.im_j<0 && q.im_k>=0
+        print(io,q.re," - ",abs(q.im_i),"im"," - ",abs(q.im_j),"j"," + ",q.im_k,"k")
+    elseif q.im_i<0 && q.im_j>=0 && q.im_k<0
+        print(io,q.re," - ",abs(q.im_i),"im"," + ",q.im_j,"j"," - ",abs(q.im_k),"k")
+    elseif q.im_i>=0 && q.im_j<0 && q.im_k<0
+        print(io,q.re," + ",q.im_i,"im"," - ",abs(q.im_j),"j"," - ",abs(q.im_k),"k")
+    else
+        print(io,q.re," - ",abs(q.im_i),"im"," - ",abs(q.im_j),"j"," - ",abs(q.im_k),"k")
     end
 end
 
@@ -124,7 +132,7 @@ Base.:-(q1::Quaternion, q2::Quaternion) =
 
 #liczba przeciwna
 Base.:-(q::Quaternion) =
-    Quaternion(-q.re, -q.im_i, -q.im_j, -q.im_k)
+    0-q
 
 #mnożenie
 Base.:*(q1::Quaternion, q2::Quaternion) =
